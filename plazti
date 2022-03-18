@@ -1,0 +1,48 @@
+SLEEP_INTERVAL = 120 #                                                          #
+SLEEP_OFFSET = "50"    #               Change this at your own risk.              #
+RATE_LIMIT = "1M" 
+PLATZIURL = "https://platzi.com/clases/"
+def _get_youtube_dl_cli_command(course):
+    """Putting together youtube-dl CLI command used to invoke the download requests.
+    
+    Arguments:
+        course {str} -- Course identifier
+    
+    Keyword Arguments:
+        sleep_interval {int} -- Minimum sleep time between video downloads (default: {150})
+        sleep_offset {int} -- Randomize sleep time up to minimum sleep time plus this value (default: {50})
+        rate_limit {str} -- Download speed limit (use "K" or "M" ) (default: {"1M"})
+    
+    Returns:
+        str -- youtue-dl CLI command
+    """
+    # Quote and space char
+    # # # # # # # # # # # #
+    qu = '"';  sp = ' '   # 
+    # Download parameters #
+
+    platziurl = PLATZIURL
+    username = qu + "" + qu
+    password = qu + "" + qu
+    filename_template = qu + "%(playlist_index)s-%(chapter_number)s-%(title)s-%(resolution)s.%(ext)s" + qu
+    minsleep = "120"
+    
+    # CMD Tool # # # # # #
+    tool = "youtube-dl"  #
+    # Flags - useful settings when invoking download request
+    usr =  "--username" + sp + username
+    pw =  "--password" + sp + password
+    minsl =  "--sleep-interval" + sp + str(minsleep)
+    maxsl =  "--max-sleep-interval" + sp + str(minsleep + SLEEP_OFFSET)
+    lrate = "--limit-rate" + sp + RATE_LIMIT
+    fn =  "-o" + sp + filename_template
+    vrb =   "--verbose"
+    curl = qu + platziurl + course + qu
+
+    # Join command
+    cli_components = [tool, usr, pw, minsl, maxsl, lrate, fn, vrb, curl]
+    command = sp.join(cli_components)
+
+    return command
+
+print(_get_youtube_dl_cli_command("2423-oraciones-relativas/40639-introduction-to-the-course"))
